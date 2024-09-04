@@ -15,7 +15,6 @@ module.exports = {
                 where: param,
                 order: [['chapter', 'ASC']]
             })
-            console.log("all");
             return Response.getResponse(req, res, result)
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
