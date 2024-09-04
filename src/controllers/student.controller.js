@@ -78,7 +78,9 @@ module.exports = {
                 return res.status(400).json({ message: 'No image uploaded' });
               }
             const student = await Student.findOne({where: param})
-            await deleteImageFromCloudinary(student.imageId)
+            if (student.imageId) {
+                await deleteImageFromCloudinary(student.imageId)
+            }
 
             let data = {
                 imageId: req.file.filename,
@@ -88,6 +90,9 @@ module.exports = {
             const result = await Student.update(data, {where: param})
             Response.editResponse(req, res, result)
         } catch (error) {
+            if (req.file) {
+                await deleteImageFromCloudinary(student.imageId)
+            }
             return Response.errorResponse(req, res, error.message)
         }
     },
