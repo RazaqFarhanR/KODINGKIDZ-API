@@ -9,12 +9,17 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
-      courseID: {
+      courseId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'course',
           key: 'id'
         }
+      },
+      chapter: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       title: {
         type: Sequelize.STRING,
