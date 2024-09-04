@@ -10,13 +10,21 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
       },
       price: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      imageId: {
+        type: Sequelize.STRING
+      },
+      imageUrl: {
+        type: Sequelize.STRING(2083)
       },
       createdAt: {
         allowNull: false,

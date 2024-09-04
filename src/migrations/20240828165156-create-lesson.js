@@ -11,20 +11,20 @@ module.exports = {
       },
       courseID: {
         type: Sequelize.UUID,
-        refrences: {
+        references: {
           model: 'course',
           key: 'id'
         }
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
       },
       url: {
-        type: Sequelize.STRING,
-        length: 2083
+        type: Sequelize.STRING(2083)
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +37,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('lessons')
+    await queryInterface.dropTable('lesson')
   }
 };

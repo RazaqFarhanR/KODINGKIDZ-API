@@ -10,19 +10,35 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       no_tlp: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
-      username: {
+      imageId: {
+        type: Sequelize.STRING
+      },
+      imageUrl: {
+        type: Sequelize.STRING(2083)
+      },
+      dateOfBirth: {
+        type: Sequelize.DATE
+      },
+      gender: {
+        type: Sequelize.ENUM('MALE', 'FEMALE')
+      },
+      domicile: {
         type: Sequelize.STRING
       },
       password: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
