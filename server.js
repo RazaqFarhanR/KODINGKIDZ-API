@@ -9,6 +9,7 @@ const publicRoute = require('./src/routes/public');
 const adminRoute = require('./src/routes/admin');
 const studentRoute = require('./src/routes/student');
 const courseRoute = require('./src/routes/course');
+const lessonRoute = require('./src/routes/lesson')
 const authUser = require("./src/middleware/authUser");
 
 // Set the port number
@@ -22,6 +23,7 @@ app.use('/api', publicRoute)
 app.use('/api/admin', authUser, adminRoute)
 app.use('/api/student', authUser, studentRoute)
 app.use('/api/course', authUser, courseRoute)
+app.use('/api/lesson', authUser, lessonRoute)
 
 app.listen(PORT,() =>{
   console.log('server run on port ' + PORT)
