@@ -17,7 +17,7 @@ const storage = new CloudinaryStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-    const allowedFormats = ["image/jpeg", "image/png"]
+    const allowedFormats = ["image/jpeg", "image/png", "image/jpg"]
 
     if (allowedFormats.includes(file.mimetype)) {
         cb(null, true)
@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
         const res = {
             status: 400,
             description: 'Bad Request',
-            result: 'Only JPEG and PNG are allowed.'
+            result: 'Only JPEG,PNG and JPG are allowed.'
         }
 
         cb(JSON.stringify(res, null, 2), false)

@@ -25,12 +25,10 @@ const deleteResponse = (req, res, data, code = 200) => res.status(code).send({
 const errorResponse = (
     req,
     res,
-    message = 'Something went wrong',
+    message,
     code = 500,
 ) => res.status(code).json({
-    status: false,
-    message,
-    data: null,
+    message: message || 'Something went wrong'
 });
 
 module.exports = {

@@ -7,7 +7,11 @@ require('dotenv').config()
 module.exports = {
     allCourse: async (req, res) => {
         try {
-            const result = await Course.findAll({})
+            const result = await Course.findAll({
+                attributes: {
+                    exclude: ['imageId', 'createdAt', 'updatedAt']
+                }
+            })
 
             return Response.getResponse(req, res, result)
         } catch (error) {
@@ -35,7 +39,7 @@ module.exports = {
             }
 
             const result = await Course.create(data)
-            return Response.addResponse(req, res, result)
+            return Response.addResponse(req, res, data)
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
         }

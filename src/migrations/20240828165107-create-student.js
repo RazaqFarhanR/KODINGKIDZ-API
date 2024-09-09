@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       no_tlp: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false
       },
       imageId: {

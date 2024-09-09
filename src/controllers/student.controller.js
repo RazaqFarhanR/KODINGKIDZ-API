@@ -4,17 +4,25 @@ const Response = require("../helpers/response")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
 const { Sequelize } = require('sequelize');
-const path = require("path");
-const fs = require("fs"); 
 const deleteImageFromCloudinary = require("../helpers/deleteImage");
 
 module.exports = {
     allStudent: async (req, res) => {
         try {
             const result = await Student.findAll({
-                attributes: ['id','name', 'email', 'no_tlp']
+                attributes: {
+                    exclude: ['imageId', 'password', 'createdAt', 'updatedAt']
+                }
             })
-            return Response.getResponse(req, res, result)
+            const updatedResults = result.map(student => {
+                const studentObject = student.toJSON();
+                if (!studentObject.imageUrl) {
+                    studentObject.imageUrl = `${req.protocol}://${req.get('host')}/src/image/profile/avatar.jpg`;
+                }
+                return studentObject;
+            });
+
+            return Response.getResponse(req, res, updatedResults)
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
         }
@@ -25,9 +33,12 @@ module.exports = {
             const result = await Student.findOne({
                 where: {id: req.user.id},
                 attributes: {
-                    exclude: ['password', 'createdAt', 'updatedAt']
+                    exclude: ['imageId', 'password', 'createdAt', 'updatedAt']
                 }
             })
+            if (result && !result.imageUrl) {
+                result.imageUrl = `${req.protocol}://${req.get('host')}/src/image/profile/avatar.jpg`;
+            }
             return Response.getResponse(req, res, result)
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
@@ -47,7 +58,8 @@ module.exports = {
             }
 
             const result = await Student.create(data)
-            return Response.addResponse(req, res, result)
+            delete data.password
+            return Response.addResponse(req, res, data)
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
         }
@@ -99,16 +111,15 @@ module.exports = {
 
     deleteStudent: async (req, res) => {
         try {
-            let param = { customer_id: req.params.id}
-            let result = await customer.findOne({where: param})
-            let oldFileName = result.image
-               
-            let dir = path.join(__dirname,"../image/profile",oldFileName)
-            fs.unlink(dir, err => console.log(err))
+            const param = {id: req.params.id}
+            const student = await Student.findOne({where: param})
+            if (student && student.imageId) {
+                await deleteImageFromCloudinary(student.imageId)
+            }
     
             // delete data
-            const delStndt = Student.destroy({where: param})
-            Response.deleteResponse(req, res, delStndt)
+            const delStndt = await Student.destroy({where: param})
+            return Response.deleteResponse(req, res, delStndt)
         } catch (error) {
             res.json({
                 message: error.message
@@ -128,7 +139,7 @@ module.exports = {
             })
             if (student) {
                 const match = await bcrypt.compare(req.body.password, student.password);
-                if (!match) return res.status(400).json({ msg: "Username or password is incorrect" });
+                if (!match) return res.status(401).json({ message: "Username or password is incorrect" });
 
                 const data = {
                     id: student.id,
@@ -139,19 +150,15 @@ module.exports = {
 
                 const token = jwt.sign({id: student.id, role: "student"}, process.env.JWT_SECRET)
                 res.json({
-                    logged: true,
+                    message: "successfully logged in",
                     data: data,
                     token: token
                 })
             } else {
-                res.json({
-                    logged: false,
-                    message: "Username or password is incorrect",
-                    data: []
-                })
+                return res.status(401).json({ message: "Username or password is incorrect" });
             }   
         } catch (error) {
-            Response.errorResponse(req, res, error.message)
+            return Response.errorResponse(req, res, error.message)
         }
     }
 }
