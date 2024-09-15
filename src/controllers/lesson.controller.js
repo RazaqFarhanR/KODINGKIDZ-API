@@ -1,6 +1,7 @@
 const models = require("../models/index")
 const Lesson = models.lesson
 const Response = require("../helpers/response")
+const { deleteVideoFromCloudinary } = require("../helpers/deleteVideo")
 require('dotenv').config()
 
 module.exports = {
@@ -55,6 +56,39 @@ module.exports = {
         } catch (error) {
             return Response.errorResponse(req, res, error.message)
         }
+    },
+
+    uploadVideo: async (req, res) => {
+        try {
+            const param = {id: req.params.id}
+            if (!req.file) {
+              return res.status(400).json({ message: 'No video file uploaded.' });
+            }
+        
+            const lesson = await Lesson.findOne({where: param})
+            if (lesson.videoId) {
+                await deleteVideoFromCloudinary(lesson.videoId)
+            }
+
+            let data = {
+                videoId: req.file.filename,
+                videoUrl: req.file.path
+            }
+        
+            const result = await Lesson.update(data, {where: param})
+            return Response.editResponse(req, res, result)
+          } catch (error) {
+            if (error.message === 'File too large') {
+              return res.status(400).json({
+                message: 'File size exceeds 100MB limit.'
+              });
+            } else if (error.message === 'Only video files are allowed!') {
+              return res.status(400).json({
+                message: 'Only video files are allowed.'
+              });
+            }
+            res.status(500).json({ message: 'Video upload failed.', error });
+          }
     },
 
     updateLesson: async (req, res) => {
