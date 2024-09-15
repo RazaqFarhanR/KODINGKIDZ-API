@@ -100,7 +100,7 @@ module.exports = {
             }
 
             const result = await Student.update(data, {where: param})
-            Response.editResponse(req, res, result)
+            return Response.editResponse(req, res, result)
         } catch (error) {
             if (req.file) {
                 await deleteImageFromCloudinary(student.imageId)

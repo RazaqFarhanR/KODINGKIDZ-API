@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'kodingKidz',
+    folder: 'kodingKidz/images',
     allowed_formats: ['jpeg', 'png', 'jpg'], 
   },
 });
