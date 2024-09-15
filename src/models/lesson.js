@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     chapter: DataTypes.INTEGER,
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
-    url: DataTypes.STRING
+    videoId: DataTypes.STRING,
+    videoUrl: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'lesson',

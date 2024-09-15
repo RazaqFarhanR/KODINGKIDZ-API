@@ -28,7 +28,10 @@ module.exports = {
       description: {
         type: Sequelize.TEXT
       },
-      url: {
+      videoId: {
+        type: Sequelize.STRING
+      },
+      videoUrl: {
         type: Sequelize.STRING(2083)
       },
       createdAt: {
