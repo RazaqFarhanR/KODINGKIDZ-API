@@ -21,6 +21,10 @@ app.use(cors())
 app.use(express.static(__dirname))
 app.use(bodyParser.json())
 
+app.get('/', (req, res) => {
+  res.send('API KodingKidz')
+})
+
 app.use('/api', publicRoute)
 app.use('/api/admin', authUser, adminRoute)
 app.use('/api/student', authUser, studentRoute)
