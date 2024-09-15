@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require("cors");
+const compression = require('compression')
 require('dotenv').config();
 require('./src/config/sequelize');
 
@@ -15,6 +16,7 @@ const authUser = require("./src/middleware/authUser");
 // Set the port number
 const PORT = process.env.PORT || 3000;
 
+app.use(compression());
 app.use(cors())
 app.use(express.static(__dirname))
 app.use(bodyParser.json())
